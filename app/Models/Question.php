@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Mail\Markdown;
 
 class Question extends Model
 {
@@ -31,7 +32,7 @@ class Question extends Model
 
     public function getUrlAttribute()
     {
-        return route('questions.show',$this->id);
+        return route('questions.show',$this->slug);
     }
 
     public function getCreatedDateAttribute()
@@ -51,5 +52,9 @@ class Question extends Model
 //        $this->answers > 0 ? ($this->best_answer_id ? "answered-accepted": "answered") : "unanswered";
     }
 
+    public function getBodyHtmlAttribute()
+    {
+        return Str::markdown($this->body);
 
+    }
 }
