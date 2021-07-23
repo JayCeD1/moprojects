@@ -48,6 +48,7 @@ class Question extends Model
             return "answered";
         }
         return "unanswered";
+//        $this->answers > 0 ? ($this->best_answer_id ? "answered-accepted": "answered") : "unanswered";
     }
 
 
