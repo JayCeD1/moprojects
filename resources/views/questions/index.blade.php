@@ -33,7 +33,7 @@
                            <hr>
                        @endforeach
                        <div class="d-flex justify-content-center">
-                             {{-- {{$questions->links()}} --}}
+                              {{$questions->links()}}
                        </div>
 
                     </div>
