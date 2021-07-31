@@ -32,6 +32,11 @@ class Answer extends Model
         return $this->created_at->diffForHumans();
     }
 
+    public function getStatusAttribute()
+    {
+        return $this->id === $this->question->best_answer_id ? 'vote-accepted': '';
+    }
+
     public static function boot()
     {
         parent::boot();
@@ -40,7 +45,12 @@ class Answer extends Model
         });
 
         static::deleted(function ($answer){
-            $answer->question->decrement('answers_count');
+            $question = $answer->question;
+            $question->decrement('answers_count');
+            if ($question->best_answer_id === $answer->id){
+                $question->best_answer_id = null;
+                $question->save();
+            }
         });
 
     }
