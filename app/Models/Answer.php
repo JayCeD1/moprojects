@@ -39,5 +39,9 @@ class Answer extends Model
            $answer->question->increment('answers_count');
         });
 
+        static::deleted(function ($answer){
+            $answer->question->decrement('answers_count');
+        });
+
     }
 }
