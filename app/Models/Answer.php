@@ -32,9 +32,9 @@ class Answer extends Model
         return $this->created_at->diffForHumans();
     }
 
-    public function getStatusAttribute()
+    public function getStatusAttribute(): string
     {
-        return $this->id === $this->question->best_answer_id ? 'vote-accepted': '';
+        return $this->isBest() ? 'vote-accepted': '';
     }
 
     public static function boot()
@@ -48,5 +48,15 @@ class Answer extends Model
             $answer->question->decrement('answers_count');
         });
 
+    }
+
+    public function getIsBestAttribute(): bool
+    {
+        return $this->isBest();
+    }
+
+    public function isBest(): bool
+    {
+        return $this->id === $this->question->best_answer_id;
     }
 }
