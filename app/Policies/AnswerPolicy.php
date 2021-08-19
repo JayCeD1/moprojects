@@ -26,7 +26,7 @@ class AnswerPolicy
 
     public function accept(User $user, Answer $answer)
     {
-        return $user->id === $answer->question->user_id;
+        return $user->id === $answer->question->user_id; //get the user's answer attached to that respective question.
     }
 
     /**
