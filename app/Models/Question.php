@@ -50,7 +50,7 @@ class Question extends Model
             return "answered";
         }
         return "unanswered";
-//        $this->answers > 0 ? ($this->best_answer_id ? "answered-accepted": "answered") : "unanswered";
+//        $this->answers_count > 0 ? ($this->best_answer_id ? "answered-accepted": "answered") : "unanswered";
     }
 
     public function getBodyHtmlAttribute()
@@ -87,5 +87,20 @@ class Question extends Model
     public function getFavoriteCountAttribute()
     {
         return $this->favorites->count();
+    }
+
+    public function votes()
+    {
+        return $this->morphToMany(User::class,'votable');
+    }
+
+    public function downVotes()
+    {
+        return $this->votes()->wherePivot('vote',-1);
+    }
+
+    public function upVotes()
+    {
+        return $this->votes()->wherePivot('vote',1);
     }
 }

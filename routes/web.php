@@ -30,4 +30,5 @@ Route::get('/questions/{question:slug}',[QuestionsController::class,'show'])->na
 Route::post('answers/{answer}/accept',\App\Http\Controllers\AcceptAnswerController::class)->name('answers.accept');
 Route::post('questions/{question}/favorites',[\App\Http\Controllers\FavoritesController::class,'store'])->name('questions.favorite');
 Route::delete('questions/{question}/favorites',[\App\Http\Controllers\FavoritesController::class,'destroy'])->name('questions.unfavorite');
+Route::post('/questions/{question}/vote',\App\Http\Controllers\VoteQuestionController::class);
 

@@ -57,12 +57,12 @@ class User extends Authenticatable
         return '#';
     }
 
-    public function answers()
+    public function answers():hasMany
     {
         return $this->hasMany(Answer::class);
     }
 
-    public function getAvatarAttribute()
+    public function getAvatarAttribute():string
     {
         $email = $this->email;
         $size = 5;
@@ -72,5 +72,31 @@ class User extends Authenticatable
     public function favorites()
     {
        return $this->belongsToMany(Question::class,'favorites')->withTimestamps();
+    }
+
+    public function voteQuestions()
+    {
+        return $this->morphedByMany(Question::class,'votable');
+    }
+
+    public function voteAnswers()
+    {
+        return $this->morphedByMany(Answer::class,'votable');
+    }
+
+    public function voteQuestion(Question $question,$vote)
+    {
+        $voteQuestion = $this->voteQuestions();
+        if ($voteQuestion->where('votable_id',$question->id)->exists()){
+            $voteQuestion->updateExistingPivot($question,['vote'=>$vote]);
+        }else{
+            $voteQuestion->attach($question,['vote'=>$vote]);
+        }
+        $question->load('votes');//eager load after query
+        $downVotes = (int) $question->downVotes()->sum('vote');//typecasting in play
+        $upVotes = (int) $question->upVotes()->sum('vote');
+
+        $question->votes_count = $downVotes + $upVotes;
+        $question->save();
     }
 }
