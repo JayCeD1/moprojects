@@ -10,13 +10,23 @@
                 @foreach($answers as $answer)
                     <div class="media">
                         <div class="d-flex flex-column vote-controls">
-                            <a title="This answer is useful" class="vote-up">
-                                <i class="fas fa-caret-up fa-3x"></i>
+                            <a title="This answer is useful" onclick="event.preventDefault(); document.getElementById('up-vote-question-{{$answer->id}}').submit();"
+                               class="vote-up {{Auth::guest() ? 'off' : ''}}">
+                                <i class="fas fa-caret-up fa-2x"></i>
                             </a>
-                            <span class="votes-count">1234</span>
-                            <a title="This answer is not useful" class="vote-down off">
+                            <form action="/answers/{{$answer->id}}/vote" id="up-vote-question-{{$answer->id}}" method="post" style="display: none;">
+                                @csrf
+                                <input type="hidden" name="vote" value="1">
+                            </form>
+                            <span class="votes-count">{{$answer->votes_count}}</span>
+                            <a title="This answer is not useful" onclick="event.preventDefault(); document.getElementById('down-vote-question-{{$answer->id}}').submit();"
+                               class="vote-down {{Auth::guest() ? 'off' : ''}}">
                                 <i class="fas fa-caret-down fa-2x"></i>
                             </a>
+                            <form action="/answers/{{$answer->id}}/vote" id="down-vote-question-{{$answer->id}}" method="post" style="display: none;">
+                                @csrf
+                                <input type="hidden" name="vote" value="-1">
+                            </form>
                             @can('accept',$answer)
                             <a title="Mark this as best answer"
                                class="{{$answer->status}} mt-2 favorited" onclick="event.preventDefault(); document.getElementById('accept-answer-{{$answer->id}}').submit();">
