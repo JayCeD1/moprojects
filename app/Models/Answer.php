@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\VotableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Answer extends Model
 {
-    use HasFactory;
+    use HasFactory,VotableTrait;
 
     protected $fillable=['body','user_id'];
 
@@ -60,18 +61,5 @@ class Answer extends Model
         return $this->id === $this->question->best_answer_id;
     }
 
-    public function votes()
-    {
-        return $this->morphToMany(User::class,'votable');
-    }
 
-    public function downVotes()
-    {
-        return $this->votes()->wherePivot('vote',-1);
-    }
-
-    public function upVotes()
-    {
-        return $this->votes()->wherePivot('vote',1);
-    }
 }
